@@ -25,7 +25,7 @@ body {
   }
 
 
-.container {
+#container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,6 +67,7 @@ body {
         text-align: center;
       }
       p {
+        margin-top:25px;
         color: var(--brand-primary);
         font-size: 18px;
         font-weight: 300;
@@ -150,4 +151,21 @@ body {
   height: 80px;
   width: 80px;
   border-radius: 50%;
+}
+#container{
+  border: 2px solid red;
+}
+table{
+  border: 2px solid rgb(204, 255, 0);
+}
+table, td, th {
+  border: 1px solid;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.contenedor-tabla{
+  margin: auto;
 }
