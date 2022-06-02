@@ -10,7 +10,7 @@ body {
   margin: 0;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--body-color);
+  background-color: var(--body-color) !important;
   font-family: 'Roboto', sans-serif;
 }
   .svg-top {
@@ -49,6 +49,7 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-bottom: 10px !important;
     }
     
 
@@ -104,17 +105,19 @@ body {
         background: linear-gradient(to right, 
         var(--brand-primary),var(--brand-light-primary));
         border: none;
-        border-radius: 50px;
+        border-radius: 50px !important;
         font-size: 22px;
         font-weight: 300;
         color: #fff;
         display: block;
         width: 150px;
         height: 40px;
-        margin: 0 auto;
+        margin: 0 auto !important;
         outline: none;
         cursor: pointer;
-        margin-top: 35px;
+        margin-top: 35px !important;
+        
+
       }
     
     footer {
@@ -152,20 +155,36 @@ body {
   width: 80px;
   border-radius: 50%;
 }
-#container{
-  border: 2px solid red;
+
+.table {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  margin: auto;
+
 }
-table{
-  border: 2px solid rgb(204, 255, 0);
+.tableContent{
+  border: 2px solid rgb(8, 100, 205) !important;
+  width: 80% !important;
+  z-index: 2 !important;
+  background-color: #fff;
+
 }
-table, td, th {
-  border: 1px solid;
+.table-responsive{
+  z-index: 2 !important;
+}
+h2{
+  color: var(--brand-primary);
+  text-align: center;
+  font-weight: lighter !important;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.contenedor-tabla{
-  margin: auto;
+#btnRegresar, .btnExportar{
+  color: #fff !important;
+  margin: 15px !important; 
+  width: 170px;
+}  
+#cajaBtn{
+  display: flex;
+  justify-content: space-between;
 }
