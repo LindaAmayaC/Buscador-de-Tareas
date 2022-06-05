@@ -8,37 +8,31 @@ function accionBtnRegresar(){
     $("#container").html(index);
 }
 function buscarbtn(){
-    var numSolicitud = document.getElementById("valor").value;
-    verificarExitenciaSolicitud(numSolicitud);
+    var nombreProyecto = document.getElementById("valor").value;
+    verificarExitenciaSolicitud(nombreProyecto);
     $("#container").html(table);
 }
 
-function verificarExitenciaSolicitud(numSolicitud){
-    let nombre ;
-    let id;
+function verificarExitenciaSolicitud(nombreProyecto){
+    let nombre="";
+    let id="";
     BX24.callMethod('sonet_group.get',
         {
             select: ["ID","NAME"]
         },function(resultado){
-         let info = resultado.data();
-          //  console.log(resultado);
-           let otro= resultado.next();
-          
-            for (let i = 0; i < info.length; i++) {
-                if(info[i].NAME==numSolicitud){
+            let infoProyecto = resultado.data();
+            resultado.next();
+            console.log(infoProyecto);
 
-                    nombre=info[i].NAME;
-                    id= info[i].ID;
-                 
-                        
-                }
-                 
-                  
-                
+            for (let i = 0; i < infoProyecto.length; i++) {
+                if(infoProyecto[i].NAME==nombreProyecto){
+
+                    nombre=infoProyecto[i].NAME;
+                    id= infoProyecto[i].ID;
+                   
+                } 
             
             } 
-            
-            
             if(id != ""){
                 traerTareas(id);
                $("#container").html(table);
@@ -46,26 +40,58 @@ function verificarExitenciaSolicitud(numSolicitud){
             else{
                 $("#container").html(index);
                 console.log("no existe");
-            } 
+            }  
            
         });
        
 }
 function traerTareas(id){
-    console.log(id);
+
     BX24.callMethod(
         "tasks.task.list", { 
             "filter": {
-                ">group_id": id}
+                "group_id": id}
             ,
-            "select": ['ID','TITLE']
+            "select": ['ID','TITLE','DESCRIPTION','CREATED_DATE','DEADLINE','STATUS','CREATED_BY']
         }, 
         function(res){
-           console.log(res.answer.result);
+            
+            let infoTareas=res.answer.result; 
+            let tareas=infoTareas.tasks;
+            
+            for (let i = 0; i < tareas.length; i++) {
+               traerComentariosTareas(tareas[i].id,tareas);
+            }
         }
     );    
 }
 
+function traerComentariosTareas(id,infoTareas){
+    let listadoComenXTareas=[];
+    console.log(infoTareas);
+    BX24.callMethod(
+        "task.commentitem.getlist", { 
+           "taskid": id
+        }, 
+        function(res){
+            let totalComentario=res.answer.result;
+            
+                for(let tarea of totalComentario){
+                   
+                    for (let i = 0; i < totalComentario.length; i++) {
+                         let comentario ={
+                            comentario :  tarea.POST_MESSAGE,
+                            fechaComentario : tarea.POST_DATE
+                        }
+                        listadoComenXTareas.push(comentario);
+                   }
+             console.log(listadoComenXTareas);
+                }
+                
+            //clasificarInformacion(infoTareas, listadoComenXTareas);
+        }
+    );    
+} 
 /* function fnExcelReport()
 {
     console.log("imp excel");
