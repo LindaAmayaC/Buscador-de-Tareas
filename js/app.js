@@ -8,49 +8,42 @@ function accionBtnRegresar(){
     $("#container").html(index);
 }
 function buscarbtn(){
-    var nombreProyecto = document.getElementById("valor").value;
+    let nombreProyecto = document.getElementById("valor").value;
     verificarExitenciaSolicitud(nombreProyecto);
-    $("#container").html(table);
 }
 
 function verificarExitenciaSolicitud(nombreProyecto){
     let nombre="";
-    let id="";
+    let idProyecto="";
     BX24.callMethod('sonet_group.get',
-        {
-            select: ["ID","NAME"]
-        },function(resultado){
+        { 
+            "FILTER":{ 
+            "%NAME": nombreProyecto},
+          
+        },
+        function(resultado){
             let infoProyecto = resultado.data();
-            resultado.next();
-            console.log(infoProyecto);
+          
+            if(Object.entries(infoProyecto).length !== 0){
 
-            for (let i = 0; i < infoProyecto.length; i++) {
-                if(infoProyecto[i].NAME==nombreProyecto){
-
-                    nombre=infoProyecto[i].NAME;
-                    id= infoProyecto[i].ID;
-                   
-                } 
-            
-            } 
-            if(id != ""){
-                traerTareas(id);
-               $("#container").html(table);
-            }
-            else{
+                nombre=infoProyecto[0].NAME;
+                idProyecto= infoProyecto[0].ID;
+                traerTareas(idProyecto);
+              //  $("#container").html(table); esto debe ser lo ultimo que se debe hacer 
+            }else{
                 $("#container").html(index);
-                console.log("no existe");
-            }  
+            }
            
         });
        
 }
-function traerTareas(id){
-
+function traerTareas(idProyecto){
+    let comentarioXTareas=[];
+    let idTareas =[];
     BX24.callMethod(
         "tasks.task.list", { 
             "filter": {
-                "group_id": id}
+                "group_id": idProyecto}
             ,
             "select": ['ID','TITLE','DESCRIPTION','CREATED_DATE','DEADLINE','STATUS','CREATED_BY']
         }, 
@@ -58,40 +51,55 @@ function traerTareas(id){
             
             let infoTareas=res.answer.result; 
             let tareas=infoTareas.tasks;
-            
-            for (let i = 0; i < tareas.length; i++) {
-               traerComentariosTareas(tareas[i].id,tareas);
-            }
+
+             for (let i = 0; i < tareas.length; i++) {
+                idTareas.push(tareas[i].id);
+                
+            } 
+                traerComentariosTareas(idTareas,tareas);//
         }
     );    
 }
 
-function traerComentariosTareas(id,infoTareas){
+function traerComentariosTareas(idTareas,infoTareas){
     let listadoComenXTareas=[];
-    console.log(infoTareas);
+
+
     BX24.callMethod(
         "task.commentitem.getlist", { 
            "taskid": id
         }, 
         function(res){
             let totalComentario=res.answer.result;
-            
-                for(let tarea of totalComentario){
+            console.log(totalComentario);
+             /*   for(let tarea of totalComentario){
                    
                     for (let i = 0; i < totalComentario.length; i++) {
-                         let comentario ={
+                        let comentario ={
                             comentario :  tarea.POST_MESSAGE,
                             fechaComentario : tarea.POST_DATE
                         }
                         listadoComenXTareas.push(comentario);
+                        console.log(comentario);
                    }
-             console.log(listadoComenXTareas);
-                }
+                 console.log(listadoComenXTareas);
+                }*/
                 
             //clasificarInformacion(infoTareas, listadoComenXTareas);
         }
     );    
-} 
+}  
+
+
+
+
+
+
+
+
+
+
+
 /* function fnExcelReport()
 {
     console.log("imp excel");
