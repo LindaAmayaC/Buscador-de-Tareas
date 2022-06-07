@@ -10,6 +10,7 @@ function accionBtnRegresar(){
 function buscarbtn(){
     let nombreProyecto = document.getElementById("valor").value;
     verificarExitenciaSolicitud(nombreProyecto);
+    $("#container").html(table);
 }
 
 function verificarExitenciaSolicitud(nombreProyecto){
@@ -38,8 +39,6 @@ function verificarExitenciaSolicitud(nombreProyecto){
        
 }
 function traerTareas(idProyecto){
-    let comentarioXTareas=[];
-    let idTareas =[];
     BX24.callMethod(
         "tasks.task.list", { 
             "filter": {
@@ -51,44 +50,41 @@ function traerTareas(idProyecto){
             
             let infoTareas=res.answer.result; 
             let tareas=infoTareas.tasks;
-
-             for (let i = 0; i < tareas.length; i++) {
-                idTareas.push(tareas[i].id);
-                
+            for (let i = 0; i < tareas.length; i++) {
+                traerComentariosTareas(tareas[i].id,tareas);
             } 
-                traerComentariosTareas(idTareas,tareas);//
         }
     );    
 }
 
 function traerComentariosTareas(idTareas,infoTareas){
+    
     let listadoComenXTareas=[];
-
-
+    
     BX24.callMethod(
         "task.commentitem.getlist", { 
-           "taskid": id
+           "taskid": idTareas
         }, 
         function(res){
             let totalComentario=res.answer.result;
-            console.log(totalComentario);
-             /*   for(let tarea of totalComentario){
-                   
-                    for (let i = 0; i < totalComentario.length; i++) {
-                        let comentario ={
-                            comentario :  tarea.POST_MESSAGE,
-                            fechaComentario : tarea.POST_DATE
-                        }
-                        listadoComenXTareas.push(comentario);
-                        console.log(comentario);
-                   }
-                 console.log(listadoComenXTareas);
-                }*/
-                
-            //clasificarInformacion(infoTareas, listadoComenXTareas);
+            for(let tarea of totalComentario){
+             
+                let comentario ={
+                        comentario :  tarea.POST_MESSAGE,
+                        fechaComentario : tarea.POST_DATE
+                    }
+                listadoComenXTareas.push(comentario);
+            } 
+          clasificarInformacion(infoTareas, listadoComenXTareas);
         }
     );    
 }  
+function clasificarInformacion(infoTareas, listadoComenXTareas){
+
+console.log(infoTareas.length);
+
+}
+
 
 
 
