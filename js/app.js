@@ -1,8 +1,9 @@
 let index ='<section class=\"wrapper\">\r\n          <header>\r\n            <div class=\"logo\">\r\n              <span><img src=\"LogoGj.jpeg\"\/><\/span>\r\n            <\/div>\r\n            <h1>Bienvenido!<\/h1>\r\n            <p>Buscador de tareas<\/p>\r\n          <\/header>\r\n          <section class=\"main-content\">\r\n            <form action=\"\">\r\n              <input type=\"text\" placeholder=\"Escriba el nombre del proyecto\" id=\"valor\">\r\n              <div class=\"line\"><\/div>\r\n              <button type=\"submit\" onclick=\"buscarbtn()\">Buscar<\/button>\r\n            <\/form>\r\n          <\/section>\r\n        \r\n        <\/section>';
-let table ='<section class=\"tableContent\">\r\n\r\n     <h1> Tareas del proyecto <\/h1>\r\n     <h2>nombre de proyecto<\/h2>\r\n      <div class=\"container table-responsive py-5\"> \r\n       <table class=\"table table-bordered table-hover\" id=\"tableTask\">\r\n        <thead class=\"thead-dark\">\r\n          <tr>\r\n            <th scope=\"col\">Nombre Tarea <\/th>\r\n            <th scope=\"col\">Descripci\u00F3n de tarea<\/th>\r\n            <th scope=\"col\">Fecha de Creaci\u00F3n<\/th>\r\n            <th scope=\"col\">Fecha Limite<\/th>\r\n            <th scope=\"col\">Estado<\/th>\r\n            <th scope=\"col\">Creado por<\/th>\r\n            <th scope=\"col\">Nombre de Proyecto<\/th>\r\n            <th scope=\"col\">Etiquetas<\/th>\r\n            <th scope=\"col\">Comentarios<\/th>\r\n            <th scope=\"col\">Fecha de comentario<\/th>\r\n          <\/tr>\r\n        <\/thead>\r\n        <tbody>\r\n          <tr id=\"tarea\">\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>Otto<\/td>\r\n            <td>\r\n              <ul>\r\n                <li>1<\/li>\r\n                <li>2<\/li>\r\n                <li>3<\/li>\r\n              <\/ul>\r\n            <\/td>\r\n            <td>\r\n              <ul>\r\n              <li>a<\/li>\r\n              <li>B<\/li>\r\n              <li>C<\/li>\r\n              <\/ul>\r\n            <\/td>\r\n          <\/tr>\r\n          \r\n        <\/tbody>\r\n      <\/table> \r\n      <\/div>\r\n      <div id=\"cajaBtn\">\r\n        \r\n          <button type=\"button\" class=\"btnRegresar btn btn-outline-primary\" onclick=\"accionBtnRegresar()\"id=\"btnRegresar\"><i class=\"bi bi-reply-all-fill\"> <\/i>Regresar al Inicio<\/button>\r\n          <button type=\"button\" class=\"btnExportar btn btn-outline-primary\" onclick=\"fnExcelReport()\" id=\"btnExportar\"><i class=\"bi bi-arrow-down-circle-fill\"> <\/i>Exportar a Excel<\/button>\r\n        \r\n\t\t\t<\/div>\r\n   <\/section>';
+let table='\r\n      <section class=\"tableContent\">\r\n\r\n     <h1> Tareas del proyecto <\/h1>\r\n           <div class=\"container table-responsive py-5\"> \r\n       <table class=\"table table-bordered table-hover\" id=\"tableTask\">\r\n        <thead class=\"thead-dark\">\r\n          <tr>\r\n            <th scope=\"col\">Nombre Tarea <\/th>\r\n            <th scope=\"col\">Descripci\u00F3n de tarea<\/th>\r\n            <th scope=\"col\">Fecha de Creaci\u00F3n<\/th>\r\n            <th scope=\"col\">Fecha Limite<\/th>\r\n            <th scope=\"col\">Estado<\/th>\r\n            <th scope=\"col\">Creado por<\/th>\r\n            <th scope=\"col\">Nombre de Proyecto<\/th>\r\n            <th scope=\"col\">Etiquetas<\/th>\r\n            <th scope=\"col\">Comentarios<\/th>\r\n            <th scope=\"col\">Fecha de comentario<\/th>\r\n          <\/tr>\r\n        <\/thead>\r\n        <tbody id=\"tbody\">\r\n       <!--     <tr id=\"tarea\">\r\n            <td id=\"nombre\"><\/td>\r\n            <td id=\"descripcion\"><\/td>\r\n            <td id=\"fecha_creacion\"><\/td>\r\n            <td id=\"fecha_limite\"><\/td>\r\n            <td id=\"estado\"><\/td>\r\n            <td id=\"creador\"><\/td>\r\n            <td id=\"nombreProyecto\"><\/td>\r\n            <td id=\"etiquetas\"><\/td>\r\n            <td id=\"cajacoment\">\r\n              <ul id=\"listaComent\">\r\n              <\/ul>\r\n            <\/td>\r\n            <td id=\"cajaFechacoment\">\r\n              <ul id=\"listaFechacoment\">\r\n              <\/ul>\r\n            <\/td>  \r\n          <\/tr> -->\r\n        <\/tbody>\r\n      <\/table> \r\n      <\/div>\r\n      <div id=\"cajaBtn\">\r\n        \r\n          <button type=\"button\" class=\"btnRegresar btn btn-outline-primary\" onclick=\"accionBtnRegresar()\"id=\"btnRegresar\"><i class=\"bi bi-reply-all-fill\"> <\/i>Regresar al Inicio<\/button>\r\n          <button type=\"button\" class=\"btnExportar btn btn-outline-primary\" onclick=\"fnExcelReport()\" id=\"btnExportar\"><i class=\"bi bi-arrow-down-circle-fill\"> <\/i>Exportar a Excel<\/button>\r\n        \r\n\t\t\t<\/div>\r\n   <\/section>';
 
 $(document).ready(function(){
    $("#container").html(index);
+   
 })
 function accionBtnRegresar(){
     $("#container").html(index);
@@ -11,6 +12,7 @@ function buscarbtn(){
     let nombreProyecto = document.getElementById("valor").value;
     verificarExitenciaSolicitud(nombreProyecto);
     $("#container").html(table);
+    
 }
 
 function verificarExitenciaSolicitud(nombreProyecto){
@@ -29,8 +31,7 @@ function verificarExitenciaSolicitud(nombreProyecto){
 
                 nombre=infoProyecto[0].NAME;
                 idProyecto= infoProyecto[0].ID;
-                traerTareas(idProyecto);
-              //  $("#container").html(table); esto debe ser lo ultimo que se debe hacer 
+                traerTareas(idProyecto,nombre);
             }else{
                 $("#container").html(index);
             }
@@ -38,65 +39,134 @@ function verificarExitenciaSolicitud(nombreProyecto){
         });
        
 }
-function traerTareas(idProyecto){
+function traerTareas(idProyecto,nombreProyecto){
     BX24.callMethod(
         "tasks.task.list", { 
             "filter": {
                 "group_id": idProyecto}
             ,
-            "select": ['ID','TITLE','DESCRIPTION','CREATED_DATE','DEADLINE','STATUS','CREATED_BY']
+            "select": ['ID','TITLE','DESCRIPTION','CREATED_DATE','DEADLINE','STATUS','CREATED_BY','GROUP']
         }, 
         function(res){
             
             let infoTareas=res.answer.result; 
             let tareas=infoTareas.tasks;
-            for (let i = 0; i < tareas.length; i++) {
-                traerComentariosTareas(tareas[i].id,tareas);
-            } 
+            tareas.nombre_proyecto=nombreProyecto;
+            traerComentariosTareas(0,tareas);
+            
         }
     );    
 }
 
-function traerComentariosTareas(idTareas,infoTareas){
-    
-    let listadoComenXTareas=[];
-    
+function traerComentariosTareas(indexActual,infoTareas){
+          
+    if(indexActual >= infoTareas.length){
+        procesarComentarioTareas(infoTareas);
+        return;
+    }
     BX24.callMethod(
         "task.commentitem.getlist", { 
-           "taskid": idTareas
+           "taskid": infoTareas[indexActual].id
         }, 
         function(res){
             let totalComentario=res.answer.result;
-            for(let tarea of totalComentario){
-             
-                let comentario ={
-                        comentario :  tarea.POST_MESSAGE,
-                        fechaComentario : tarea.POST_DATE
-                    }
-                listadoComenXTareas.push(comentario);
-            } 
-          clasificarInformacion(infoTareas, listadoComenXTareas);
+            infoTareas[indexActual].comentarios=totalComentario.map(comentario=>({
+                nombreComentario :  comentario.POST_MESSAGE,
+                fechaComentario : comentario.POST_DATE
+            }));
+     
+            traerComentariosTareas(indexActual+1,infoTareas);
+          
         }
     );    
-}  
-function clasificarInformacion(infoTareas, listadoComenXTareas){
+} 
+function clasificarInformacion(infoTareas){
+    let subTitle= '<h2>'+infoTareas.nombre_proyecto+'</h2>';
+    $("h1").after(subTitle);
 
-console.log(infoTareas.length);
+    
+   let contenedorTable=document.getElementById("tbody");
+    let fila = '<tr>';
+    for (let i = 0; i < infoTareas.length; i++) {
+       
+            fila +='<td>'+infoTareas[i].title+'</td>';
+                    
+            fila +='<td>'+infoTareas[i].description+'</td>';
+                    
+            fila +='<td>'+normalizarFecha(infoTareas[i].createdDate)+'</td>';
+                    
+            fila +='<td>'+normalizarFecha(infoTareas[i].deadline)+'</td>';
+                    
+            fila +='<td>'+nombreEstado(infoTareas[i].status)+'</td>';
+
+            fila +='<td>'+infoTareas[i].creator.name+'</td>';
+
+            fila +='<td>'+infoTareas.nombre_proyecto+'</td>';
+                    
+            fila +='<td>'+infoTareas[i].createdBy+'</td>';
+
+            fila +='<td><ul>';
+                   
+        for (let j = 0; j < infoTareas[i].comentarios.length; j++) {
+         
+           fila+='<li>'+infoTareas[i].comentarios[j].nombreComentario+'</li>';
+           
+        }  
+        fila +='</td></ul>';
+
+        fila +='<td><ul>';
+                   
+        for (let j = 0; j < infoTareas[i].comentarios.length; j++) {
+         
+           fila+='<li>'+normalizarFecha(infoTareas[i].comentarios[j].fechaComentario)+'</li>';
+           
+        }  
+        fila +='</td></ul>';
+        fila += '</tr>';
+      
+      
+       
+      
+     contenedorTable.innerHTML=fila;
+     
+    }
+     
+
+}
+function procesarComentarioTareas(tareas){
+    clasificarInformacion(tareas);
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-/* function fnExcelReport()
+function normalizarFecha(fecha){
+    var fechaNormalizada = new Date(fecha).toLocaleDateString();
+    return fechaNormalizada;
+}
+function nombreEstado(numero){
+    
+    if(numero==1){
+        return "Nuevo";
+    }
+    else if(numero==2){
+        return "Pendiente";
+    }
+    else if(numero==3){
+        return "En progreso";
+    }
+    else if(numero==4){
+        return "Parcialmente completado";
+    }
+    else if(numero==5){
+        return "Completado";
+    }
+    else if(numero==6){
+        return "Diferido";
+    }
+    else if(numero==7){
+        return "Declinado";
+    }
+}
+function fnExcelReport()
 {
     console.log("imp excel");
     var table = $("#tableTask");
@@ -116,4 +186,4 @@ console.log(infoTareas.length);
         });
     }
     
-}  */
+}  

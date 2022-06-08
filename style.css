@@ -8,7 +8,7 @@
 
 body {
   margin: 0;
-  height: 100vh;
+  height: 100vh; 
   overflow: hidden;
   background-color: var(--body-color) !important;
   font-family: 'Roboto', sans-serif;
@@ -30,6 +30,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100%;
+  padding: 40px;
 }
   .wrapper {
     padding: 40px;
@@ -161,17 +162,26 @@ body {
   background-color: #fff;
   border-radius: 20px;
   margin: auto;
+  overflow-x:scroll;
+  overflow-y: auto;
 
 }
 .tableContent{
   border: 2px solid rgb(8, 100, 205) !important;
-  width: 80% !important;
+  width: 90% !important;
   z-index: 2 !important;
   background-color: #fff;
-
+  max-width: 90%;
+  max-height: 80%;
+  padding: 10px;
+ 
+overflow-x:hidden;
+  overflow-y: auto;
 }
 .table-responsive{
   z-index: 2 !important;
+ 
+  
 }
 h2{
   color: var(--brand-primary);
