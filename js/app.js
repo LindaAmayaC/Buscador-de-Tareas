@@ -1,42 +1,57 @@
-let index ='<section class=\"wrapper\">\r\n          <header>\r\n            <div class=\"logo\">\r\n              <span><img src=\"LogoGj.jpeg\"\/><\/span>\r\n            <\/div>\r\n            <h1>Bienvenido!<\/h1>\r\n            <p>Buscador de tareas<\/p>\r\n          <\/header>\r\n          <section class=\"main-content\">\r\n            <form action=\"\">\r\n              <input type=\"text\" placeholder=\"Escriba el nombre del proyecto\" id=\"valor\">\r\n              <div class=\"line\"><\/div>\r\n              <button type=\"submit\" onclick=\"buscarbtn()\">Buscar<\/button>\r\n            <\/form>\r\n          <\/section>\r\n        \r\n        <\/section>';
+let index =' \r\n    <section class=\"wrapper\">\r\n    <header>\r\n      <div class=\"logo\">\r\n        <span><img src=\"LogoGj.jpeg\"\/><\/span>\r\n      <\/div>\r\n      <h1>Bienvenido!<\/h1>\r\n      <p>Buscador de tareas<\/p>\r\n    <\/header>\r\n    <section class=\"main-content\">\r\n      <form action=\"\">\r\n        <input type=\"text\" list=\"lista\" name=\"input\" id=\"valor\">\r\n        <datalist id=\"lista\" >\r\n        <\/datalist>\r\n        \r\n        <div class=\"line\"><\/div>\r\n        <button type=\"submit\" onclick=\"buscarbtn()\">Buscar<\/button>\r\n      <\/form>\r\n    <\/section> ';
 let table='\r\n      <section class=\"tableContent\">\r\n\r\n     <h1> Tareas del proyecto <\/h1>\r\n           <div class=\"container table-responsive py-5\"> \r\n       <table class=\"table table-bordered table-hover\" id=\"tableTask\">\r\n        <thead class=\"thead-dark\">\r\n          <tr>\r\n            <th scope=\"col\">Nombre Tarea <\/th>\r\n            <th scope=\"col\">Descripci\u00F3n de tarea<\/th>\r\n            <th scope=\"col\">Fecha de Creaci\u00F3n<\/th>\r\n            <th scope=\"col\">Fecha Limite<\/th>\r\n            <th scope=\"col\">Estado<\/th>\r\n            <th scope=\"col\">Creado por<\/th>\r\n            <th scope=\"col\">Nombre de Proyecto<\/th>\r\n            <th scope=\"col\">Etiquetas<\/th>\r\n            <th scope=\"col\">Comentarios<\/th>\r\n            <th scope=\"col\">Fecha de comentario<\/th>\r\n          <\/tr>\r\n        <\/thead>\r\n        <tbody id=\"tbody\">\r\n       <!--     <tr id=\"tarea\">\r\n            <td id=\"nombre\"><\/td>\r\n            <td id=\"descripcion\"><\/td>\r\n            <td id=\"fecha_creacion\"><\/td>\r\n            <td id=\"fecha_limite\"><\/td>\r\n            <td id=\"estado\"><\/td>\r\n            <td id=\"creador\"><\/td>\r\n            <td id=\"nombreProyecto\"><\/td>\r\n            <td id=\"etiquetas\"><\/td>\r\n            <td id=\"cajacoment\">\r\n              <ul id=\"listaComent\">\r\n              <\/ul>\r\n            <\/td>\r\n            <td id=\"cajaFechacoment\">\r\n              <ul id=\"listaFechacoment\">\r\n              <\/ul>\r\n            <\/td>  \r\n          <\/tr> -->\r\n        <\/tbody>\r\n      <\/table> \r\n      <\/div>\r\n      <div id=\"cajaBtn\">\r\n        \r\n          <button type=\"button\" class=\"btnRegresar btn btn-outline-primary\" onclick=\"accionBtnRegresar()\"id=\"btnRegresar\"><i class=\"bi bi-reply-all-fill\"> <\/i>Regresar al Inicio<\/button>\r\n          <button type=\"button\" class=\"btnExportar btn btn-outline-primary\" onclick=\"fnExcelReport()\" id=\"btnExportar\"><i class=\"bi bi-arrow-down-circle-fill\"> <\/i>Exportar a Excel<\/button>\r\n        \r\n\t\t\t<\/div>\r\n   <\/section>';
 
+let arrayVacio=[];
+
+
+
 $(document).ready(function(){
-   $("#container").html(index);
-   
-})
+    $("#container").html(index); 
+      buscarGrupos();
+});
 function accionBtnRegresar(){
     $("#container").html(index);
-}
-function buscarbtn(){
-    let nombreProyecto = document.getElementById("valor").value;
-    verificarExitenciaSolicitud(nombreProyecto);
-    $("#container").html(table);
-    
+    buscarGrupos();
+   
 }
 
-function verificarExitenciaSolicitud(nombreProyecto){
-    let nombre="";
-    let idProyecto="";
+function buscarbtn(){
+    let idProyecto = document.getElementById("valor").value;
+    traerNombreProyecto(idProyecto);
+    $("#container").html(table); 
+}
+
+function buscarGrupos(){
+    BX24.callMethod('sonet_group.get',
+        {},function(res){
+        res?.answer?.result?.forEach((data) => {
+            arrayVacio.push(data);
+            });
+            if (res.more()) {
+                res.next();     
+            }
+            for (let i = 0; i < arrayVacio.length; i++) {
+                let pintarOpcion='<option value='+arrayVacio[i].ID+'>'+arrayVacio[i].NAME+'</option>';
+                $("#lista").append(pintarOpcion);
+            }
+    });
+           
+}
+
+
+function traerNombreProyecto(idProyecto){
+   
     BX24.callMethod('sonet_group.get',
         { 
             "FILTER":{ 
-            "%NAME": nombreProyecto},
+            "ID": idProyecto},
           
         },
         function(resultado){
-            let infoProyecto = resultado.data();
-          
-            if(Object.entries(infoProyecto).length !== 0){
-
-                nombre=infoProyecto[0].NAME;
-                idProyecto= infoProyecto[0].ID;
-                traerTareas(idProyecto,nombre);
-            }else{
-                $("#container").html(index);
-            }
+            let nombreProyecto=resultado.data()[0].NAME;
+           traerTareas(idProyecto,nombreProyecto);
            
-        });
+    });
        
 }
 function traerTareas(idProyecto,nombreProyecto){
@@ -48,20 +63,17 @@ function traerTareas(idProyecto,nombreProyecto){
             "select": ['ID','TITLE','DESCRIPTION','CREATED_DATE','DEADLINE','STATUS','CREATED_BY','GROUP']
         }, 
         function(res){
-            
             let infoTareas=res.answer.result; 
             let tareas=infoTareas.tasks;
-            tareas.nombre_proyecto=nombreProyecto;
-            traerComentariosTareas(0,tareas);
+           traerComentariosTareas(0,tareas,nombreProyecto);
             
         }
     );    
 }
 
-function traerComentariosTareas(indexActual,infoTareas){
-          
+function traerComentariosTareas(indexActual,infoTareas,nombreProyecto){
     if(indexActual >= infoTareas.length){
-        procesarComentarioTareas(infoTareas);
+        procesarComentarioTareas(infoTareas,nombreProyecto);
         return;
     }
     BX24.callMethod(
@@ -75,13 +87,13 @@ function traerComentariosTareas(indexActual,infoTareas){
                 fechaComentario : comentario.POST_DATE
             }));
      
-            traerComentariosTareas(indexActual+1,infoTareas);
+            traerComentariosTareas(indexActual+1,infoTareas,nombreProyecto);
           
         }
     );    
 } 
-function clasificarInformacion(infoTareas){
-    let subTitle= '<h2>'+infoTareas.nombre_proyecto+'</h2>';
+function clasificarInformacion(infoTareas,nombreProyecto){
+    let subTitle= '<h2>'+nombreProyecto+'</h2>';
     $("h1").after(subTitle);
 
     
@@ -101,9 +113,9 @@ function clasificarInformacion(infoTareas){
 
             fila +='<td>'+infoTareas[i].creator.name+'</td>';
 
-            fila +='<td>'+infoTareas.nombre_proyecto+'</td>';
+            fila +='<td>'+nombreProyecto+'</td>';
                     
-            fila +='<td>'+infoTareas[i].createdBy+'</td>';
+            fila +='<td>'+infoTareas[i].createdBy+'</td>';//debe ir tags
 
             fila +='<td><ul>';
                    
@@ -124,17 +136,13 @@ function clasificarInformacion(infoTareas){
         fila +='</td></ul>';
         fila += '</tr>';
       
-      
-       
-      
      contenedorTable.innerHTML=fila;
      
     }
      
-
 }
-function procesarComentarioTareas(tareas){
-    clasificarInformacion(tareas);
+function procesarComentarioTareas(tareas,nombreProyecto){
+    clasificarInformacion(tareas,nombreProyecto);
 
 }
 
@@ -168,6 +176,7 @@ function nombreEstado(numero){
 }
 function fnExcelReport()
 {
+    
     console.log("imp excel");
     var table = $("#tableTask");
 
